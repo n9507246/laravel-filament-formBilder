@@ -10,12 +10,14 @@ use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
 use Illuminate\Contracts\View\View;
 use Livewire\Component;
- 
+
 class CreatePost extends Component implements HasForms
 {
     use InteractsWithForms;
-    
-    public ?array $data = [];
+
+    public ?string $title = null;
+    public ?string $content = null;
+
     
     public function mount(): void
     {
@@ -24,18 +26,19 @@ class CreatePost extends Component implements HasForms
     
     public function form(Form $form): Form
     {
+        
         return $form
             ->schema([
-                TextInput::make('title')
-                    ->required(),
+                TextInput::make('title'),
                 MarkdownEditor::make('content'),
-                // ...
-            ])
-            ->statePath('data');
+            ]);
     }
     
     public function create(): void
     {
+        $this->validate([
+            'title' => 'required|string|min:2|max:50',
+        ]);
         dd($this->form->getState());
     }
     
